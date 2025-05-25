@@ -76,7 +76,6 @@ export class MPINValidator {
     "101000",
     "100100",
     "012345",
-    "987654",
     "135790",
     "246810",
     "147852",
@@ -300,7 +299,7 @@ export class MPINValidator {
       
       {
         mpin: "1234",
-        demographics: { dob: "1990-12-34", spouseDob: "", anniversary: "" },
+        demographics: { dob: "1990-12-31", spouseDob: "", anniversary: "" },
         expected: { strength: "WEAK", weaknessReasons: ["COMMONLY_USED"] },
       },
 

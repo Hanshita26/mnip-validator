@@ -6,15 +6,15 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import type { Demographics } from "@/lib/mpin-validator"
 
 import { CheckCircle, XCircle, Play, RotateCcw } from "lucide-react"
-
 import { MPINValidator, type ValidationResult } from "@/lib/mpin-validator"
 
 interface TestCase {
   id: number
   mpin: string
-  demographics: any
+  demographics: Demographics
   expected: Partial<ValidationResult>
   actual?: ValidationResult
   passed?: boolean

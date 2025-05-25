@@ -11,7 +11,7 @@ import { Badge } from "@/components/ui/badge"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
-import { Shield, ShieldAlert, Calendar, User, Heart, TestTube } from "lucide-react"
+import { Shield, ShieldAlert, Calendar, User, TestTube } from "lucide-react"
 import { MPINValidator, type Demographics, type ValidationResult } from "@/lib/mpin-validator"
 import { TestRunner } from "@/components/test-runner"
 
