@@ -1,5 +1,6 @@
 export interface Demographics {
-  dob?: string // YYYY-MM-DD format
+    // initially optional 
+  dob?: string 
   spouseDob?: string
   anniversary?: string
 }
@@ -11,9 +12,13 @@ export interface ValidationResult {
   detectedPatterns: string[]
 }
 
+
+{/*random 4 and 6 digit common pins */}
 export class MPINValidator {
   private commonPins4Digit = new Set([
+    
     "1234",
+    "2345",
     "1111",
     "0000",
     "1212",
@@ -45,6 +50,7 @@ export class MPINValidator {
     "2846",
   ])
 
+  
   private commonPins6Digit = new Set([
     "123456",
     "111111",
@@ -90,31 +96,31 @@ export class MPINValidator {
 
   validateMPIN(mpin: string, demographics: Demographics = {}): ValidationResult {
     const weaknessReasons: string[] = []
-    let securityScore = 100
+    let securityScore = 100 
     const detectedPatterns: string[] = []
 
-    // Check if commonly used
+
     if (this.isCommonlyUsed(mpin)) {
       weaknessReasons.push("COMMONLY_USED")
       securityScore -= 40
       detectedPatterns.push("Common PIN")
     }
 
-    // Check for patterns
+
     const patterns = this.detectPatterns(mpin)
     if (patterns.length > 0) {
       securityScore -= patterns.length * 15
       detectedPatterns.push(...patterns)
     }
 
-    // Check demographic matches
     const demographicIssues = this.checkDemographics(mpin, demographics)
     weaknessReasons.push(...demographicIssues)
     securityScore -= demographicIssues.length * 25
 
-    // Ensure minimum score
+    
     securityScore = Math.max(0, securityScore)
 
+    // classification of strong or weak
     const strength = weaknessReasons.length === 0 && securityScore >= 60 ? "STRONG" : "WEAK"
 
     return {
@@ -134,20 +140,19 @@ export class MPINValidator {
     return false
   }
 
+  // pattern recognition - repeated patterns , keyboard patters, any sequence(odd or even number)
   private detectPatterns(mpin: string): string[] {
     const patterns: string[] = []
 
-    // Check for repeated digits
-    if (this.hasRepeatedDigits(mpin)) {
+
+    if (this.hasRepeatedDigits(mpin)) { 
       patterns.push("Repeated digits")
     }
 
-    // Check for sequential patterns
     if (this.hasSequentialPattern(mpin)) {
       patterns.push("Sequential pattern")
     }
 
-    // Check for keyboard patterns
     if (this.hasKeyboardPattern(mpin)) {
       patterns.push("Keyboard pattern")
     }
@@ -155,33 +160,33 @@ export class MPINValidator {
     return patterns
   }
 
-  private hasRepeatedDigits(mpin: string): boolean {
-    // Check if all digits are the same
+  private hasRepeatedDigits(mpin: string): boolean { // logic 
+    
     if (new Set(mpin).size === 1) return true
 
-    // Check for repeated pairs (like 1122, 3344)
+    
     if (mpin.length === 4) {
-      return mpin[0] === mpin[1] && mpin[2] === mpin[3]
+      return mpin[0] === mpin[1] && mpin[2] === mpin[3] // digits at all index are same
     } else if (mpin.length === 6) {
-      // Check various repeated patterns for 6-digit
+     
       return (
         (mpin[0] === mpin[1] && mpin[2] === mpin[3] && mpin[4] === mpin[5]) || // 112233
-        mpin.slice(0, 3) === mpin.slice(3, 6) // 123123
+        mpin.slice(0, 3) === mpin.slice(3, 6) 
       )
     }
 
     return false
   }
 
-  private hasSequentialPattern(mpin: string): boolean {
+  private hasSequentialPattern(mpin: string): boolean { // logic 
     const digits = mpin.split("").map(Number)
 
-    // Check ascending sequence
+    
     let isAscending = true
     let isDescending = true
 
     for (let i = 1; i < digits.length; i++) {
-      if (digits[i] !== digits[i - 1] + 1) isAscending = false
+      if (digits[i] !== digits[i - 1] + 1) isAscending = false 
       if (digits[i] !== digits[i - 1] - 1) isDescending = false
     }
 
@@ -190,16 +195,17 @@ export class MPINValidator {
 
   private hasKeyboardPattern(mpin: string): boolean {
     const keyboardPatterns = [
+        // common patterns
       "2580",
       "1470",
       "3690",
       "1590",
       "7410",
-      "9630", // Phone keypad patterns
+      "9630", 
       "147258",
       "159357",
       "258147",
-      "357159", // 6-digit keyboard patterns
+      "357159", 
     ]
 
     return keyboardPatterns.includes(mpin)
@@ -223,21 +229,22 @@ export class MPINValidator {
     return issues
   }
 
+  // data conversion
   private matchesDemographic(mpin: string, date: string): boolean {
     if (!date) return false
 
     const [year, month, day] = date.split("-")
     const dateVariations = [
-      day + month, // DDMM
-      month + day, // MMDD
-      year.slice(-2) + month, // YYMM
-      year.slice(-2) + day, // YYDD
-      month + year.slice(-2), // MMYY
-      day + year.slice(-2), // DDYY
-      day + month + year.slice(-2), // DDMMYY
-      month + day + year.slice(-2), // MMDDYY
-      year.slice(-2) + month + day, // YYMMDD
-      year.slice(-2) + day + month, // YYDDMM
+      day + month,
+      month + day, 
+      year.slice(-2) + month, 
+      year.slice(-2) + day, 
+      month + year.slice(-2), 
+      day + year.slice(-2), 
+      day + month + year.slice(-2), 
+      month + day + year.slice(-2),
+      year.slice(-2) + month + day, 
+      year.slice(-2) + day + month, 
     ]
 
     return dateVariations.some((variation) => {
@@ -253,13 +260,13 @@ export class MPINValidator {
   // Method to generate test cases
   generateTestCases(): Array<{ mpin: string; demographics: Demographics; expected: Partial<ValidationResult> }> {
     return [
-      // Part A: Common PINs
+      // basic common pins used
       { mpin: "1234", demographics: {}, expected: { strength: "WEAK", weaknessReasons: ["COMMONLY_USED"] } },
       { mpin: "0000", demographics: {}, expected: { strength: "WEAK", weaknessReasons: ["COMMONLY_USED"] } },
       { mpin: "1111", demographics: {}, expected: { strength: "WEAK", weaknessReasons: ["COMMONLY_USED"] } },
       { mpin: "7392", demographics: {}, expected: { strength: "STRONG", weaknessReasons: [] } },
 
-      // Part B: Demographics
+      // based on demographics
       {
         mpin: "0215",
         demographics: { dob: "1990-02-15", spouseDob: "", anniversary: "" },
@@ -290,14 +297,14 @@ export class MPINValidator {
         expected: { strength: "WEAK", weaknessReasons: ["DEMOGRAPHIC_ANNIVERSARY"] },
       },
 
-      // Multiple issues
+      
       {
         mpin: "1234",
         demographics: { dob: "1990-12-34", spouseDob: "", anniversary: "" },
         expected: { strength: "WEAK", weaknessReasons: ["COMMONLY_USED"] },
       },
 
-      // 6-digit tests
+      // 6-digits
       { mpin: "123456", demographics: {}, expected: { strength: "WEAK", weaknessReasons: ["COMMONLY_USED"] } },
       { mpin: "000000", demographics: {}, expected: { strength: "WEAK", weaknessReasons: ["COMMONLY_USED"] } },
       {
@@ -311,7 +318,7 @@ export class MPINValidator {
         expected: { strength: "WEAK", weaknessReasons: ["DEMOGRAPHIC_DOB_SELF"] },
       },
 
-      // Strong cases
+      
       {
         mpin: "7392",
         demographics: { dob: "1990-02-15", spouseDob: "1985-03-12", anniversary: "2010-06-14" },
@@ -325,7 +332,7 @@ export class MPINValidator {
       },
       { mpin: "847193", demographics: {}, expected: { strength: "STRONG", weaknessReasons: [] } },
 
-      // Edge cases
+      // basic Edge cases like repeatition, sequence - ascending or descending
       { mpin: "1122", demographics: {}, expected: { strength: "WEAK", weaknessReasons: ["COMMONLY_USED"] } },
       { mpin: "2468", demographics: {}, expected: { strength: "WEAK", weaknessReasons: ["COMMONLY_USED"] } },
       { mpin: "9876", demographics: {}, expected: { strength: "WEAK", weaknessReasons: ["COMMONLY_USED"] } },

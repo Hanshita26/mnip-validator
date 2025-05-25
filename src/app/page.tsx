@@ -1,6 +1,8 @@
-"use client"
+// main page 
+"use client" // no need of backend, everything runs on client side only
 
 import { useState } from "react"
+// shadcn/ui reusable components
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -8,19 +10,20 @@ import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+
 import { Shield, ShieldAlert, Calendar, User, Heart, TestTube } from "lucide-react"
 import { MPINValidator, type Demographics, type ValidationResult } from "@/lib/mpin-validator"
 import { TestRunner } from "@/components/test-runner"
 
 export default function MPINValidatorApp() {
-  const [mpin, setMpin] = useState("")
+  const [mpin, setMpin] = useState("") // use of react hook33
   const [demographics, setDemographics] = useState<Demographics>({
     dob: "",
     spouseDob: "",
     anniversary: "",
   })
   const [result, setResult] = useState<ValidationResult | null>(null)
-  const [pinLength, setPinLength] = useState<4 | 6>(4)
+  const [pinLength, setPinLength] = useState<4 | 6>(4) // initial value set to 4
 
   const validator = new MPINValidator()
 
@@ -47,9 +50,9 @@ export default function MPINValidatorApp() {
             <Shield className="h-8 w-8 text-blue-600" />
             MPIN Security Validator
           </h1>
-          <p className="text-gray-600 max-w-2xl mx-auto">
+          {/* <p className="text-gray-600 max-w-2xl mx-auto">
             Advanced MPIN strength analysis using demographic data and pattern recognition
-          </p>
+          </p> */}
         </div>
 
         <Tabs defaultValue="validator" className="w-full">
@@ -139,7 +142,7 @@ export default function MPINValidatorApp() {
 
                     <div className="space-y-2">
                       <Label htmlFor="anniversary" className="flex items-center gap-2">
-                        <Heart className="h-4 w-4" />
+                        {/* <Heart className="h-4 w-4" /> */}
                         Wedding Anniversary
                       </Label>
                       <Input
@@ -173,7 +176,7 @@ export default function MPINValidatorApp() {
                 <CardContent className="space-y-4">
                   {result ? (
                     <>
-                      {/* Strength Badge */}
+                      
                       <div className="flex items-center gap-2">
                         <span className="text-sm font-medium">Strength:</span>
                         <Badge variant={result.strength === "STRONG" ? "default" : "destructive"} className="text-sm">
@@ -181,7 +184,7 @@ export default function MPINValidatorApp() {
                         </Badge>
                       </div>
 
-                      {/* Weakness Reasons */}
+                      
                       {result.weaknessReasons.length > 0 && (
                         <div className="space-y-2">
                           <span className="text-sm font-medium text-red-600">Security Issues:</span>
@@ -195,7 +198,7 @@ export default function MPINValidatorApp() {
                         </div>
                       )}
 
-                      {/* Security Score */}
+                      
                       <div className="space-y-2">
                         <div className="flex justify-between text-sm">
                           <span>Security Score</span>
@@ -215,11 +218,12 @@ export default function MPINValidatorApp() {
                         </div>
                       </div>
 
-                      {/* Recommendations */}
+                      
                       {result.strength === "WEAK" && (
                         <div className="space-y-2">
                           <span className="text-sm font-medium text-blue-600">Recommendations:</span>
                           <ul className="text-sm text-gray-600 space-y-1 list-disc list-inside">
+                            {/*added certain points to show basic 4-digit pattern */}
                             <li>Avoid common patterns like 1234, 1111, or 0000</li>
                             <li>Don't use dates related to you or your family</li>
                             <li>Use a random combination of digits</li>

@@ -1,11 +1,14 @@
 "use client"
 
 import { useState } from "react"
+// shadcn/ui reusable componenets for design
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
+
 import { CheckCircle, XCircle, Play, RotateCcw } from "lucide-react"
+
 import { MPINValidator, type ValidationResult } from "@/lib/mpin-validator"
 
 interface TestCase {
@@ -47,7 +50,6 @@ export function TestRunner() {
         passed,
       })
 
-      // Add delay for visual effect
       await new Promise((resolve) => setTimeout(resolve, 100))
       setTestResults([...results])
     }
@@ -85,7 +87,7 @@ export function TestRunner() {
             </Button>
           </div>
 
-          {/* Test Summary */}
+          
           {summary.total > 0 && (
             <div className="flex gap-4 p-4 bg-gray-50 rounded-lg">
               <div className="text-center">
@@ -111,7 +113,7 @@ export function TestRunner() {
         </CardContent>
       </Card>
 
-      {/* Test Results */}
+      
       {testResults.length > 0 && (
         <Card>
           <CardHeader>
