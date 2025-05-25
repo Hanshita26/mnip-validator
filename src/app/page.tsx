@@ -225,7 +225,7 @@ export default function MPINValidatorApp() {
                           <ul className="text-sm text-gray-600 space-y-1 list-disc list-inside">
                             {/*added certain points to show basic 4-digit pattern */}
                             <li>Avoid common patterns like 1234, 1111, or 0000</li>
-                            <li>Don't use dates related to you or your family</li>
+                            <li>Dont use dates related to you or your family</li>
                             <li>Use a random combination of digits</li>
                             <li>Consider using a longer PIN for better security</li>
                           </ul>
