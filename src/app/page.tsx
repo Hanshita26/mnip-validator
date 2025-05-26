@@ -1,5 +1,5 @@
-// main page 
-"use client" // no need of backend, everything runs on client side only
+// main page for the frontend
+"use client" // only client side , no backend
 
 import { useState } from "react"
 // shadcn/ui reusable components
@@ -11,19 +11,20 @@ import { Badge } from "@/components/ui/badge"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
-import { Shield, ShieldAlert, Calendar, User, TestTube } from "lucide-react"
+import { Shield, ShieldAlert, Calendar, User, TestTube, Github, Info } from "lucide-react"
 import { MPINValidator, type Demographics, type ValidationResult } from "@/lib/mpin-validator"
 import { TestRunner } from "@/components/test-runner"
 
 export default function MPINValidatorApp() {
-  const [mpin, setMpin] = useState("") // use of react hook33
+  const [mpin, setMpin] = useState("")
   const [demographics, setDemographics] = useState<Demographics>({
     dob: "",
     spouseDob: "",
     anniversary: "",
   })
   const [result, setResult] = useState<ValidationResult | null>(null)
-  const [pinLength, setPinLength] = useState<4 | 6>(4) // initial value set to 4
+  const [pinLength, setPinLength] = useState<4 | 6>(4)
+  const [showAbout, setShowAbout] = useState(false)
 
   const validator = new MPINValidator()
 
@@ -32,7 +33,6 @@ export default function MPINValidatorApp() {
       alert(`Please enter a ${pinLength}-digit PIN`)
       return
     }
-
     const validationResult = validator.validateMPIN(mpin, demographics)
     setResult(validationResult)
   }
@@ -41,20 +41,70 @@ export default function MPINValidatorApp() {
     setDemographics((prev) => ({ ...prev, [field]: value }))
   }
 
+// github link
+  const handleGithubClick = () => {
+    window.open("https://github.com/Hanshita26/mnip-validator", "_blank", "noopener,noreferrer")
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
       <div className="max-w-4xl mx-auto space-y-6">
-        {/* Header */}
-        <div className="text-center space-y-2">
-          <h1 className="text-4xl font-bold text-gray-900 flex items-center justify-center gap-2">
-            <Shield className="h-8 w-8 text-blue-600" />
-            MPIN Security Validator
-          </h1>
-          {/* <p className="text-gray-600 max-w-2xl mx-auto">
-            Advanced MPIN strength analysis using demographic data and pattern recognition
-          </p> */}
+
+        {/* Top Bar with Buttons */}
+        <div className="flex justify-between items-center mb-2">
+          <div className="text-center space-y-2 flex-1">
+            <h1 className="text-4xl font-bold text-gray-900 flex items-center justify-center gap-2">
+              <Shield className="h-8 w-8 text-blue-600" />
+              MPIN Security Validator
+            </h1>
+          </div>
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              className="flex items-center gap-2"
+              onClick={handleGithubClick}
+              title="View on GitHub"
+            >
+              <Github className="h-5 w-5" />
+              GitHub
+            </Button>
+            <Button
+              variant="outline"
+              className="flex items-center gap-2"
+              onClick={() => setShowAbout((v) => !v)}
+              title="About the Project"
+            >
+              <Info className="h-5 w-5" />
+              About the Project
+            </Button>
+          </div>
         </div>
 
+        {/* About Project Section */}
+        {showAbout && (
+          <Card className="mb-4">
+            <CardHeader>
+              <CardTitle>About the Project</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2 text-gray-700">
+              <p>
+                <strong>Tech Stack:</strong> This project is built using React, TypeScript, and Shadcn UI for the frontend. The logic and validation are handled completely on the client side.
+              </p>
+              <p>
+                <strong>MPIN Validation Logic:</strong> The MPIN validator checks for common patterns, personal information (like date of birth, anniversary), and uses some rules to determine the strength of the entered PIN(strong or weak).
+              </p>
+              <p>
+                <strong>Data Science Algorithms:</strong> The project uses pattern recognition such as repetition of digits, sequence(ascending or descending order) and frequency analysis to detect weak MPINs.
+              </p>
+              <p>
+                <strong>Testing:</strong> The test suite runs multiple cases to verify the accuracy and reliability of the validation logic.
+              </p>
+              
+            </CardContent>
+          </Card>
+        )}
+
+       
         <Tabs defaultValue="validator" className="w-full">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="validator" className="flex items-center gap-2">
@@ -76,7 +126,9 @@ export default function MPINValidatorApp() {
                     <User className="h-5 w-5" />
                     MPIN & Demographics
                   </CardTitle>
-                  <CardDescription>Enter your MPIN and personal information for security analysis</CardDescription>
+                  <CardDescription>
+                    Enter your MPIN and personal information for security analysis
+                  </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {/* PIN Length Selection */}
@@ -119,7 +171,6 @@ export default function MPINValidatorApp() {
                       <Calendar className="h-4 w-4" />
                       Demographics (Optional)
                     </div>
-
                     <div className="space-y-2">
                       <Label htmlFor="dob">Date of Birth</Label>
                       <Input
@@ -129,7 +180,6 @@ export default function MPINValidatorApp() {
                         onChange={(e) => handleDemographicChange("dob", e.target.value)}
                       />
                     </div>
-
                     <div className="space-y-2">
                       <Label htmlFor="spouse-dob">Spouse Date of Birth</Label>
                       <Input
@@ -139,10 +189,8 @@ export default function MPINValidatorApp() {
                         onChange={(e) => handleDemographicChange("spouseDob", e.target.value)}
                       />
                     </div>
-
                     <div className="space-y-2">
                       <Label htmlFor="anniversary" className="flex items-center gap-2">
-                        {/* <Heart className="h-4 w-4" /> */}
                         Wedding Anniversary
                       </Label>
                       <Input
@@ -176,15 +224,12 @@ export default function MPINValidatorApp() {
                 <CardContent className="space-y-4">
                   {result ? (
                     <>
-                      
                       <div className="flex items-center gap-2">
                         <span className="text-sm font-medium">Strength:</span>
                         <Badge variant={result.strength === "STRONG" ? "default" : "destructive"} className="text-sm">
                           {result.strength}
                         </Badge>
                       </div>
-
-                      
                       {result.weaknessReasons.length > 0 && (
                         <div className="space-y-2">
                           <span className="text-sm font-medium text-red-600">Security Issues:</span>
@@ -197,8 +242,6 @@ export default function MPINValidatorApp() {
                           </div>
                         </div>
                       )}
-
-                      
                       <div className="space-y-2">
                         <div className="flex justify-between text-sm">
                           <span>Security Score</span>
@@ -210,22 +253,19 @@ export default function MPINValidatorApp() {
                               result.securityScore >= 70
                                 ? "bg-green-500"
                                 : result.securityScore >= 40
-                                  ? "bg-yellow-500"
-                                  : "bg-red-500"
+                                ? "bg-yellow-500"
+                                : "bg-red-500"
                             }`}
                             style={{ width: `${result.securityScore}%` }}
                           />
                         </div>
                       </div>
-
-                      
                       {result.strength === "WEAK" && (
                         <div className="space-y-2">
                           <span className="text-sm font-medium text-blue-600">Recommendations:</span>
                           <ul className="text-sm text-gray-600 space-y-1 list-disc list-inside">
-                            {/*added certain points to show basic 4-digit pattern */}
                             <li>Avoid common patterns like 1234, 1111, or 0000</li>
-                            <li>Dont use dates related to you or your family</li>
+                            <li>Don't use dates related to you or your family</li>
                             <li>Use a random combination of digits</li>
                             <li>Consider using a longer PIN for better security</li>
                           </ul>

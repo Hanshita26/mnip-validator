@@ -282,7 +282,7 @@ export class MPINValidator {
         expected: { strength: "WEAK", weaknessReasons: ["DEMOGRAPHIC_DOB_SELF"] },
       },
 
-      // Spouse demographics
+      // Spouse related
       {
         mpin: "0312",
         demographics: { dob: "", spouseDob: "1985-03-12", anniversary: "" },
@@ -339,3 +339,5 @@ export class MPINValidator {
     ]
   }
 }
+
+
